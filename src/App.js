@@ -40,6 +40,7 @@ export default class App extends React.Component {
 
 	async componentWillMount() {
 		if ((await this.retrieveData()) === null) {
+			this.enableNotification();
 			await this.storeData(3);
 		} else {
 			const toBeConsumed = await this.retrieveData();
@@ -87,6 +88,60 @@ export default class App extends React.Component {
 			console.log(error);
 			return null;
 		}
+	};
+
+	disableNotification = () => {
+		Notifications.cancelAllScheduledNotificationsAsync();
+	}
+
+	enableNotification = () => {
+		Notifications.cancelAllScheduledNotificationsAsync();
+		const localNotification = (title, body) => ({
+			title,
+			body,
+			android: {
+				sound: true,
+				priority: 'high',
+				sticky: false,
+				vibrate: true,
+			},
+		});
+		const schedulingOptions = (date = 'July 7 2018 16:10') => ({
+			time: new Date(date),
+			repeat: 'day',
+		});
+		Notifications.scheduleLocalNotificationAsync(
+			localNotification('Hydrate - 1', 'Start your day with some water.'),
+			schedulingOptions('July 7 2018 8:00')
+		);
+		Notifications.scheduleLocalNotificationAsync(
+			localNotification('Hydrate - 2', 'Its time to get Hydrated.'),
+			schedulingOptions('July 7 2018 11:00')
+		);
+		Notifications.scheduleLocalNotificationAsync(
+			localNotification('Hydrate - 3', 'Wew, its afternoon maybe some water can help.'),
+			schedulingOptions('July 7 2018 13:00')
+		);
+		Notifications.scheduleLocalNotificationAsync(
+			localNotification('Hydrate - 4', 'Cmon, lets drink some water.'),
+			schedulingOptions('July 7 2018 15:00')
+		);
+		Notifications.scheduleLocalNotificationAsync(
+			localNotification('Hydrate - 5', 'You know whats better than some water, more water.'),
+			schedulingOptions('July 7 2018 17:00')
+		);
+		Notifications.scheduleLocalNotificationAsync(
+			localNotification('Hydrate - 6', 'Good Evening, Drink water friends.'),
+			schedulingOptions('July 7 2018 19:00')
+		);
+		Notifications.scheduleLocalNotificationAsync(
+			localNotification('Hydrate - 7', 'Such a long day, refresh yourself with some water.'),
+			schedulingOptions('July 7 2018 21:00')
+		);
+		Notifications.scheduleLocalNotificationAsync(
+			localNotification('Hydrate - 8', 'Time to go to bed, but first some water.'),
+			schedulingOptions('July 7 2018 23:00')
+		);
 	};
 
 	render() {
@@ -177,6 +232,14 @@ export default class App extends React.Component {
 					</Text>
 					<Text style={{ fontSize: 50, fontWeight: '400' }}>/{this.state.desiredConsumption}</Text>
 				</View>
+				<View style={styles.notificationViewStyle}>
+					<TouchableOpacity onPress={this.enableNotification}>
+						<Text style={styles.notificationEnableTextStyle}>ENABLE NOTIFICATIONS</Text>
+					</TouchableOpacity>
+					<TouchableOpacity onPress={this.disableNotification}>
+						<Text style={styles.notificationDisableTextStyle}>DISABLE NOTIFICATIONS</Text>
+					</TouchableOpacity>
+				</View>
 				<View style={styles.buttonGroup}>
 					{buttons.map(button => (
 						<CBButton
@@ -226,5 +289,20 @@ const styles = {
 		flex: 1,
 		justifyContent: 'space-between',
 		backgroundColor: '#ecf0f1',
+	},
+	notificationEnableTextStyle: {
+		color: '#0052D4',
+		alignSelf: 'center',
+		fontWeight: '800',
+		marginBottom: 30,
+	},
+	notificationDisableTextStyle: {
+		color: 'gray',
+		alignSelf: 'center',
+		fontWeight: '800',
+		marginBottom: 30,
+	},
+	notificationViewStyle: {
+		flex: 1 / 6,
 	},
 };
